@@ -1,0 +1,112 @@
+config {
+  type: "operations",
+  hasOutput: false,
+  tags: ["load", "raw"],
+  description: "Loads the 7 FMCG CSV extracts from GCS into the raw_fmcg BigQuery dataset. Run this before `dataform run` on the transformation DAG (schedule as a separate step, e.g. Cloud Composer / Workflows, or a Dataform release+execute with tag 'load')."
+}
+
+js {
+  const rawDataset = dataform.projectConfig.vars && dataform.projectConfig.vars.raw_dataset
+    ? dataform.projectConfig.vars.raw_dataset
+    : "raw_fmcg";
+  const gcsBucket = dataform.projectConfig.vars && dataform.projectConfig.vars.gcs_bucket
+    ? dataform.projectConfig.vars.gcs_bucket
+    : "gs://gcs-raw-dev/fmcg_data";
+  const project = dataform.projectConfig.defaultDatabase || "project-1-474502";
+}
+
+-- 01 master_product
+LOAD DATA OVERWRITE `${project}.${rawDataset}.master_product`
+(
+  SKU_ID STRING, SKU_Name STRING, Category STRING, Sub_Category STRING, Brand STRING,
+  Unit STRING, Unit_Cost FLOAT64, Selling_Price FLOAT64, Supplier_ID STRING,
+  Lead_Time_Days INT64, Shelf_Life_Days INT64, MOQ INT64, Pack_Size INT64, ABC_Class STRING
+)
+FROM FILES (
+  format = 'CSV',
+  uris = ['${gcsBucket}/01_master_product.csv'],
+  skip_leading_rows = 1
+);
+
+---
+-- 02 supplier_master
+LOAD DATA OVERWRITE `${project}.${rawDataset}.supplier_master`
+(
+  Supplier_ID STRING, Supplier_Name STRING, Supplier_Category STRING, City STRING, Province STRING,
+  Lead_Time_Days INT64, Minimum_Order_Value INT64, MOQ INT64, On_Time_Delivery_Rate FLOAT64,
+  Quality_Rate FLOAT64, Payment_Term_Days INT64, Supplier_Status STRING
+)
+FROM FILES (
+  format = 'CSV',
+  uris = ['${gcsBucket}/02_supplier_master.csv'],
+  skip_leading_rows = 1
+);
+
+---
+-- 03 customer_master
+LOAD DATA OVERWRITE `${project}.${rawDataset}.customer_master`
+(
+  Customer_ID STRING, Customer_Name STRING, Customer_Type STRING, City STRING, Province STRING,
+  Customer_Segment STRING, Join_Date DATE
+)
+FROM FILES (
+  format = 'CSV',
+  uris = ['${gcsBucket}/03_customer_master.csv'],
+  skip_leading_rows = 1
+);
+
+---
+-- 04 inventory_transactions
+LOAD DATA OVERWRITE `${project}.${rawDataset}.inventory_transactions`
+(
+  Transaction_ID STRING, Transaction_Date DATE, SKU_ID STRING, Warehouse_ID STRING,
+  Transaction_Type STRING, Reference_No STRING, Quantity INT64, Unit_Cost FLOAT64,
+  Total_Cost FLOAT64, Supplier_ID STRING, Customer_ID STRING
+)
+FROM FILES (
+  format = 'CSV',
+  uris = ['${gcsBucket}/04_inventory_transactions.csv'],
+  skip_leading_rows = 1
+);
+
+---
+-- 05 purchase_orders
+LOAD DATA OVERWRITE `${project}.${rawDataset}.purchase_orders`
+(
+  PO_ID STRING, PO_Date DATE, Supplier_ID STRING, SKU_ID STRING, Order_Qty INT64,
+  Expected_Date DATE, Actual_Receipt_Date DATE, Received_Qty INT64, Unit_Cost FLOAT64,
+  PO_Status STRING, Lead_Time_Actual_Days FLOAT64
+)
+FROM FILES (
+  format = 'CSV',
+  uris = ['${gcsBucket}/05_purchase_orders.csv'],
+  skip_leading_rows = 1
+);
+
+---
+-- 06 sales_transactions
+LOAD DATA OVERWRITE `${project}.${rawDataset}.sales_transactions`
+(
+  Sales_ID STRING, Sales_Date DATE, Customer_ID STRING, SKU_ID STRING, Warehouse_ID STRING,
+  Quantity INT64, Unit_Price FLOAT64, Discount FLOAT64, Net_Sales FLOAT64
+)
+FROM FILES (
+  format = 'CSV',
+  uris = ['${gcsBucket}/06_sales_transactions.csv'],
+  skip_leading_rows = 1
+);
+
+---
+-- 07 current_inventory
+LOAD DATA OVERWRITE `${project}.${rawDataset}.current_inventory`
+(
+  SKU_ID STRING, Warehouse_ID STRING, Current_Stock INT64, Reserved_Stock INT64,
+  Available_Stock INT64, On_Order_Qty INT64, Inventory_Value FLOAT64,
+  Last_Inbound_Date DATE, Last_Outbound_Date DATE, Days_Since_Last_Outbound INT64,
+  Demand_STD_90D FLOAT64
+)
+FROM FILES (
+  format = 'CSV',
+  uris = ['${gcsBucket}/07_current_inventory.csv'],
+  skip_leading_rows = 1
+);

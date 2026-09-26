@@ -1,0 +1,31 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.staging_dataset,
+  name: "stg_master_product",
+  tags: ["staging"],
+  description: "Cleaned product master: typed columns, trimmed strings, derived margin.",
+  columns: {
+    sku_id: "Unique product key",
+    abc_class_source: "ABC class as loaded from CSV (reference only, recompute in mart_abc_analysis)"
+  }
+}
+
+SELECT
+  TRIM(SKU_ID)                     AS sku_id,
+  TRIM(SKU_Name)                   AS sku_name,
+  TRIM(Category)                   AS category,
+  TRIM(Sub_Category)               AS sub_category,
+  TRIM(Brand)                      AS brand,
+  TRIM(Unit)                       AS unit,
+  CAST(Unit_Cost AS NUMERIC)       AS unit_cost,
+  CAST(Selling_Price AS NUMERIC)   AS selling_price,
+  SAFE_DIVIDE(Selling_Price - Unit_Cost, NULLIF(Unit_Cost, 0)) AS margin_pct,
+  TRIM(Supplier_ID)                AS supplier_id,
+  CAST(Lead_Time_Days AS INT64)    AS lead_time_days,
+  CAST(Shelf_Life_Days AS INT64)   AS shelf_life_days,
+  CAST(MOQ AS INT64)               AS moq,
+  CAST(Pack_Size AS INT64)         AS pack_size,
+  UPPER(TRIM(ABC_Class))           AS abc_class_source
+FROM ${ref("master_product")}
+WHERE SKU_ID IS NOT NULL
+QUALIFY ROW_NUMBER() OVER (PARTITION BY SKU_ID ORDER BY SKU_ID) = 1

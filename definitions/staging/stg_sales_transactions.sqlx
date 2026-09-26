@@ -1,0 +1,25 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.staging_dataset,
+  name: "stg_sales_transactions",
+  tags: ["staging"],
+  description: "Deduplicated sales lines with Discount nulls treated as 0."
+}
+
+WITH dedup AS (
+  SELECT DISTINCT
+    TRIM(Sales_ID)            AS sales_id,
+    CAST(Sales_Date AS DATE)  AS sales_date,
+    TRIM(Customer_ID)         AS customer_id,
+    TRIM(SKU_ID)               AS sku_id,
+    TRIM(Warehouse_ID)         AS warehouse_id,
+    CAST(Quantity AS INT64)    AS quantity,
+    CAST(Unit_Price AS NUMERIC) AS unit_price,
+    COALESCE(CAST(Discount AS NUMERIC), 0) AS discount,
+    CAST(Net_Sales AS NUMERIC) AS net_sales
+  FROM ${ref("sales_transactions")}
+  WHERE Sales_ID IS NOT NULL
+)
+SELECT *
+FROM dedup
+QUALIFY ROW_NUMBER() OVER (PARTITION BY sales_id ORDER BY sales_date) = 1
