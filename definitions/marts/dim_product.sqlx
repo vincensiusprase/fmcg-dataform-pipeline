@@ -1,0 +1,31 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "dim_product",
+  tags: ["mart", "dim"],
+  description: "Product dimension enriched with recomputed ABC class.",
+  assertions: {
+    uniqueKey: ["sku_id"],
+    nonNull: ["sku_id", "category"]
+  }
+}
+
+SELECT
+  mp.sku_id,
+  mp.sku_name,
+  mp.category,
+  mp.sub_category,
+  mp.brand,
+  mp.unit,
+  mp.unit_cost,
+  mp.selling_price,
+  mp.margin_pct,
+  mp.supplier_id,
+  mp.lead_time_days AS nominal_lead_time_days,
+  mp.shelf_life_days,
+  mp.moq,
+  mp.pack_size,
+  mp.abc_class_source,
+  abc.abc_class AS abc_class_recomputed
+FROM ${ref("stg_master_product")} mp
+LEFT JOIN ${ref("mart_abc_analysis")} abc USING (sku_id)

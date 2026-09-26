@@ -1,0 +1,53 @@
+config {
+    type: "table",
+    schema: dataform.projectConfig.vars.mart_dataset,
+    name: "mart_safety_stock_rop",
+    tags: ["mart", "analysis"],
+    description: "Safety Stock, Reorder Point and Min/Max levels per SKU x Warehouse, built from int_demand_stats + int_po_performance + dim_product. Service level configurable via includes/constants.js (default 95%, Z=1.65)."
+}
+
+js {
+    const {
+        service_level_z,
+        default_service_level
+    } = require("includes/constants");
+    const z = service_level_z[default_service_level];
+}
+
+WITH
+  lt AS (
+  -- SKU-level actual lead time stats; fall back to nominal lead time when no PO history yet
+  SELECT
+    sku_id,
+    COALESCE(AVG(avg_lead_time_actual_days), MAX(p.nominal_lead_time_days)) AS lead_time_avg,
+    COALESCE(AVG(stddev_lead_time_actual_days), MAX(p.nominal_lead_time_days) * 0.2) AS lead_time_stddev
+  FROM
+    ${ref("int_po_performance")} pp
+  RIGHT JOIN
+    ${ref("dim_product")} p
+  USING
+    (sku_id)
+  GROUP BY
+    1 )
+SELECT
+  ds.sku_id,
+  ds.warehouse_id,
+  ds.avg_daily_demand_90d AS avg_daily_demand,
+  ds.stddev_daily_demand_90d AS demand_stddev,
+  lt.lead_time_avg,
+  lt.lead_time_stddev,
+  ${z} AS service_level_z,
+  '${default_service_level}' AS service_level_target,
+  -- combined-variability safety stock (accounts for both demand AND lead-time variability)
+  ROUND( ${z} * SQRT( lt.lead_time_avg * POW(COALESCE(ds.stddev_daily_demand_90d, 0), 2) + POW(COALESCE(ds.avg_daily_demand_90d, 0), 2) * POW(COALESCE(lt.lead_time_stddev, 0), 2) ), 1 ) AS safety_stock,
+  -- simple textbook safety stock (demand variability only), for comparison
+  ROUND(${z} * COALESCE(ds.stddev_daily_demand_90d, 0) * SQRT(lt.lead_time_avg), 1) AS safety_stock_simple,
+  ROUND(ds.avg_daily_demand_90d * lt.lead_time_avg, 1) AS lead_time_demand,
+  ROUND(ds.avg_daily_demand_90d * lt.lead_time_avg + ${z} * SQRT( lt.lead_time_avg * POW(COALESCE(ds.stddev_daily_demand_90d, 0), 2) + POW(COALESCE(ds.avg_daily_demand_90d, 0), 2) * POW(COALESCE(lt.lead_time_stddev, 0), 2) ), 1) AS reorder_point,
+  ROUND(ds.avg_daily_demand_90d * lt.lead_time_avg * 1.1, 1) AS max_level_buffer
+FROM
+  ${ref("int_demand_stats")} ds
+JOIN
+  lt
+USING
+  (sku_id)

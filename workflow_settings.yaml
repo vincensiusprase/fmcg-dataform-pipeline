@@ -1,0 +1,12 @@
+dataformCoreVersion: 3.0.52
+defaultProject: "project-1-474502"
+defaultLocation: "US"
+defaultDataset: "dwh_fmcg"
+defaultAssertionDataset: "dwh_fmcg_assertions"
+vars:
+  raw_dataset: "raw_fmcg"
+  staging_dataset: "stg_fmcg"
+  intermediate_dataset: "int_fmcg"
+  mart_dataset: "mart_fmcg"
+  gcs_bucket: "gs://gcs-raw-dev/fmcg_data"
+  snapshot_date: "2025-09-30"

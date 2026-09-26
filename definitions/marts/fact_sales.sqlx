@@ -1,0 +1,23 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "fact_sales",
+  tags: ["mart", "fact"],
+  description: "Grain: 1 row per sales line.",
+  assertions: {
+    uniqueKey: ["sales_id"],
+    nonNull: ["sales_id", "customer_id", "sku_id", "sales_date"]
+  }
+}
+
+SELECT
+  sales_id,
+  sales_date,
+  customer_id,
+  sku_id,
+  warehouse_id,
+  quantity,
+  unit_price,
+  discount,
+  net_sales
+FROM ${ref("stg_sales_transactions")}

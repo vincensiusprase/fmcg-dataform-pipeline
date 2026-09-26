@@ -1,0 +1,35 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "mart_abc_analysis",
+  tags: ["mart", "analysis"],
+  description: "ABC classification recomputed from annualized consumption value. Cutoffs: A <= 75% cumulative value, B <= 93%, C = remainder (see includes/constants.js abc_cutoffs).",
+  assertions: {
+    uniqueKey: ["sku_id"],
+    nonNull: ["sku_id", "abc_class"]
+  }
+}
+
+WITH ranked AS (
+  SELECT
+    sku_id,
+    annualized_qty,
+    annual_consumption_value,
+    SUM(annual_consumption_value) OVER () AS total_value,
+    SUM(annual_consumption_value) OVER (ORDER BY annual_consumption_value DESC
+      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_value,
+    ROW_NUMBER() OVER (ORDER BY annual_consumption_value DESC) AS value_rank
+  FROM ${ref("int_sku_annual_value")}
+)
+SELECT
+  sku_id,
+  annualized_qty,
+  annual_consumption_value,
+  value_rank,
+  ROUND(SAFE_DIVIDE(running_value, total_value), 4) AS cumulative_value_pct,
+  CASE
+    WHEN SAFE_DIVIDE(running_value, total_value) <= 0.75 THEN 'A'
+    WHEN SAFE_DIVIDE(running_value, total_value) <= 0.93 THEN 'B'
+    ELSE 'C'
+  END AS abc_class
+FROM ranked

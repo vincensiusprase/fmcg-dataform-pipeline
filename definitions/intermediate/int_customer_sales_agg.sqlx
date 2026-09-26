@@ -1,0 +1,24 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.intermediate_dataset,
+  name: "int_customer_sales_agg",
+  tags: ["intermediate"],
+  description: "Per-customer Recency / Frequency / Monetary raw inputs, snapshot date from workflow_settings vars.snapshot_date."
+}
+
+js {
+  const snapshotDate = dataform.projectConfig.vars && dataform.projectConfig.vars.snapshot_date
+    ? dataform.projectConfig.vars.snapshot_date
+    : "2025-09-30";
+}
+
+SELECT
+  customer_id,
+  MIN(sales_date)                                    AS first_purchase_date,
+  MAX(sales_date)                                    AS last_purchase_date,
+  DATE_DIFF(DATE('${snapshotDate}'), MAX(sales_date), DAY) AS recency_days,
+  COUNT(DISTINCT sales_id)                           AS frequency_orders,
+  SUM(net_sales)                                     AS monetary_total,
+  ROUND(AVG(net_sales), 2)                           AS avg_order_value
+FROM ${ref("stg_sales_transactions")}
+GROUP BY 1

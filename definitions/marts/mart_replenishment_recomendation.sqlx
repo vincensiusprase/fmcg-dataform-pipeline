@@ -1,0 +1,63 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "mart_replenishment_recommendation",
+  tags: ["mart", "analysis"],
+  description: "Projected stock vs. Reorder Point per SKU x Warehouse, with recommended order quantity rounded to MOQ/Pack_Size. Run after mart_current_inventory and mart_safety_stock_rop."
+}
+
+WITH base AS (
+  SELECT
+    ci.sku_id,
+    ci.warehouse_id,
+    ci.current_stock,
+    ci.available_stock,
+    ci.on_order_qty,
+    ss.avg_daily_demand,
+    ss.lead_time_avg,
+    ss.safety_stock,
+    ss.reorder_point,
+    ROUND(ss.reorder_point + ss.max_level_buffer, 1)      AS max_level,
+    p.moq,
+    p.pack_size,
+    p.abc_class_recomputed AS abc_class
+  FROM ${ref("mart_current_inventory")} ci
+  JOIN ${ref("mart_safety_stock_rop")} ss USING (sku_id, warehouse_id)
+  JOIN ${ref("dim_product")} p USING (sku_id)
+),
+projected AS (
+  SELECT
+    *,
+    ROUND(current_stock + on_order_qty - (avg_daily_demand * lead_time_avg), 1) AS projected_stock
+  FROM base
+)
+SELECT
+  sku_id,
+  warehouse_id,
+  abc_class,
+  current_stock,
+  available_stock,
+  on_order_qty,
+  avg_daily_demand,
+  lead_time_avg,
+  safety_stock,
+  reorder_point,
+  max_level,
+  projected_stock,
+  CASE WHEN projected_stock < reorder_point THEN TRUE ELSE FALSE END AS replenishment_required,
+  CASE
+    WHEN projected_stock < reorder_point THEN
+      -- round the gap up to a MOQ/pack-size multiple, never less than MOQ
+      CAST(
+        CEIL(GREATEST(max_level - projected_stock, moq) / pack_size) * pack_size
+      AS INT64)
+    ELSE 0
+  END AS recommended_order_qty,
+  CASE
+    WHEN current_stock <= 0 THEN 'STOCKOUT'
+    WHEN projected_stock < reorder_point THEN 'REORDER_NOW'
+    WHEN projected_stock < reorder_point * 1.15 THEN 'WATCH'
+    WHEN projected_stock > max_level * 1.3 THEN 'OVERSTOCK'
+    ELSE 'HEALTHY'
+  END AS replenishment_status
+FROM projected

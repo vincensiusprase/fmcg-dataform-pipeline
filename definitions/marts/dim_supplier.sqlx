@@ -1,0 +1,14 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "dim_supplier",
+  tags: ["mart", "dim"],
+  description: "Supplier dimension.",
+  assertions: {
+    uniqueKey: ["supplier_id"],
+    nonNull: ["supplier_id"]
+  }
+}
+
+SELECT *
+FROM ${ref("stg_supplier_master")}

@@ -1,0 +1,33 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.intermediate_dataset,
+  name: "int_daily_demand",
+  tags: ["intermediate"],
+  description: "One row per SKU x Warehouse x calendar day observed in the transaction history, with OUTBOUND quantity (0 when no shipment that day). Basis for average daily demand and demand std dev used in Safety Stock / ROP."
+}
+
+WITH calendar_bounds AS (
+  SELECT sku_id, warehouse_id, MIN(transaction_date) AS min_date, MAX(transaction_date) AS max_date
+  FROM ${ref("stg_inventory_transactions")}
+  GROUP BY 1, 2
+),
+calendar AS (
+  SELECT b.sku_id, b.warehouse_id, d AS calendar_date
+  FROM calendar_bounds b,
+  UNNEST(GENERATE_DATE_ARRAY(b.min_date, b.max_date)) AS d
+),
+outbound AS (
+  SELECT sku_id, warehouse_id, transaction_date, SUM(quantity) AS qty_shipped
+  FROM ${ref("stg_inventory_transactions")}
+  WHERE transaction_type = 'OUTBOUND'
+  GROUP BY 1, 2, 3
+)
+SELECT
+  c.sku_id,
+  c.warehouse_id,
+  c.calendar_date,
+  COALESCE(o.qty_shipped, 0) AS qty_shipped,
+  EXTRACT(DAYOFWEEK FROM c.calendar_date) IN (1, 7) AS is_weekend
+FROM calendar c
+LEFT JOIN outbound o
+  ON o.sku_id = c.sku_id AND o.warehouse_id = c.warehouse_id AND o.transaction_date = c.calendar_date
