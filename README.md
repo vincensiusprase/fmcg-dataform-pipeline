@@ -35,18 +35,25 @@ fmcg_dataform/
     │   ├── int_sku_annual_value.sqlx
     │   └── int_customer_sales_agg.sqlx
     └── marts/                    # dim_* / fact_* / mart_*
-        ├── dim_product.sqlx
-        ├── dim_supplier.sqlx
-        ├── dim_customer.sqlx
-        ├── fact_inventory_transactions.sqlx
-        ├── fact_sales.sqlx
-        ├── fact_purchase_orders.sqlx
-        ├── mart_current_inventory.sqlx
-        ├── mart_abc_analysis.sqlx
-        ├── mart_rfm_analysis.sqlx
-        ├── mart_safety_stock_rop.sqlx
-        ├── mart_replenishment_recommendation.sqlx
-        └── mart_supplier_performance.sqlx
+    │   ├── dim_product.sqlx
+    │   ├── dim_supplier.sqlx
+    │   ├── dim_customer.sqlx
+    │   ├── fact_inventory_transactions.sqlx
+    │   ├── fact_sales.sqlx
+    │   ├── fact_purchase_orders.sqlx
+    │   ├── mart_current_inventory.sqlx
+    │   ├── mart_abc_analysis.sqlx
+    │   ├── mart_rfm_analysis.sqlx
+    │   ├── mart_safety_stock_rop.sqlx
+    │   ├── mart_replenishment_recommendation.sqlx
+    │   ├── mart_supplier_performance.sqlx
+    └── consumption/
+        ├── vw_customer_value.sqlx
+        ├── vw_inventory_health.sqlx
+        ├── vw_inventory_value_summary.sqlx
+        ├── vw_product_sales_performance.sqlx
+        ├── vw_sales_trend_monthly.sqlx
+        └── vw_supplier_scorecard.sqlx  
 ```
 
 ## 2. Alur data
