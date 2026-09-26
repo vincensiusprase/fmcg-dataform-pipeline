@@ -8,5 +8,6 @@ vars:
   staging_dataset: "stg_fmcg"
   intermediate_dataset: "int_fmcg"
   mart_dataset: "mart_fmcg"
+  consumption_dataset: "consumption_fmcg"
   gcs_bucket: "gs://gcs-raw-dev/fmcg_data"
   snapshot_date: "2025-09-30"

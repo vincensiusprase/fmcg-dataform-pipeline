@@ -1,0 +1,21 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.consumption_dataset,
+  name: "vw_inventory_value_summary",
+  tags: ["consumption"],
+  description: "One row per Category x ABC Class x Warehouse: total inventory value and stock status mix. Primary table for 'how much value is tied up in inventory' questions."
+}
+
+SELECT
+  ih.category,
+  ih.abc_class,
+  ih.warehouse,
+  COUNT(DISTINCT ih.sku)                              AS sku_count,
+  SUM(ih.current_stock_units)                          AS total_stock_units,
+  SUM(ih.inventory_value)                               AS total_inventory_value_idr,
+  COUNTIF(ih.stock_status = 'STOCKOUT')                 AS skus_stockout,
+  COUNTIF(ih.stock_status = 'REORDER_NOW')              AS skus_reorder_now,
+  COUNTIF(ih.stock_status = 'OVERSTOCK')                AS skus_overstock,
+  COUNTIF(ih.stock_status = 'HEALTHY')                  AS skus_healthy
+FROM ${ref("vw_inventory_health")} ih
+GROUP BY 1, 2, 3

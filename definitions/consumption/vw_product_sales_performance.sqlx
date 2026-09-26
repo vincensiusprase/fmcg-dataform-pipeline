@@ -1,0 +1,43 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.consumption_dataset,
+  name: "vw_product_sales_performance",
+  tags: ["consumption"],
+  description: "One row per SKU: lifetime sales, revenue and ABC class. Primary table for 'best/worst selling product' questions.",
+  columns: {
+    sku: "Product code",
+    revenue_idr: "Net sales (after discount) in IDR, lifetime of the dataset",
+    units_sold: "Total quantity sold, lifetime"
+  }
+}
+
+WITH sales_agg AS (
+  SELECT
+    sku_id,
+    COUNT(DISTINCT sales_id)  AS order_lines,
+    SUM(quantity)             AS units_sold,
+    SUM(net_sales)            AS revenue_idr,
+    SUM(discount)             AS total_discount_idr,
+    MIN(sales_date)           AS first_sale_date,
+    MAX(sales_date)           AS last_sale_date
+  FROM ${ref("fact_sales")}
+  GROUP BY 1
+)
+SELECT
+  p.sku_id                    AS sku,
+  p.sku_name                  AS product_name,
+  p.category,
+  p.sub_category,
+  p.brand,
+  p.abc_class_recomputed      AS abc_class,
+  p.unit_cost,
+  p.selling_price,
+  s.order_lines,
+  s.units_sold,
+  s.revenue_idr,
+  s.total_discount_idr,
+  ROUND(SAFE_DIVIDE(s.revenue_idr, NULLIF(s.units_sold, 0)), 0) AS avg_selling_price_realized,
+  s.first_sale_date,
+  s.last_sale_date
+FROM ${ref("dim_product")} p
+LEFT JOIN sales_agg s USING (sku_id)

@@ -1,0 +1,43 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.consumption_dataset,
+  name: "vw_inventory_health",
+  tags: ["consumption"],
+  description: "One row per SKU x Warehouse: current stock, replenishment recommendation and product info, in business-friendly column names. Primary table for 'what needs reordering' questions.",
+  columns: {
+    sku: "Product code",
+    product_name: "Product display name",
+    category: "Product category (Food & Beverage / Personal Care / Household)",
+    abc_class: "ABC value class: A = top value drivers, B = mid, C = long tail",
+    warehouse: "Warehouse code (WH01 = Jakarta, WH02 = Surabaya)",
+    stock_status: "STOCKOUT / REORDER_NOW / WATCH / OVERSTOCK / HEALTHY",
+    needs_reorder: "TRUE if projected stock will fall below the reorder point",
+    recommended_order_units: "Suggested PO quantity, already rounded to MOQ/pack size"
+  }
+}
+
+SELECT
+  r.sku_id                        AS sku,
+  p.sku_name                      AS product_name,
+  p.category,
+  p.sub_category,
+  p.brand,
+  r.abc_class,
+  r.warehouse_id                  AS warehouse,
+  r.current_stock                 AS current_stock_units,
+  r.available_stock                AS available_stock_units,
+  r.on_order_qty                   AS on_order_units,
+  r.avg_daily_demand               AS avg_daily_demand_units,
+  r.safety_stock                   AS safety_stock_units,
+  r.reorder_point                  AS reorder_point_units,
+  r.max_level                      AS max_stock_level_units,
+  r.projected_stock                AS projected_stock_units,
+  r.replenishment_required         AS needs_reorder,
+  r.recommended_order_qty          AS recommended_order_units,
+  r.replenishment_status           AS stock_status,
+  ci.inventory_value,
+  ci.movement_flag,
+  ci.days_since_last_outbound
+FROM ${ref("mart_replenishment_recommendation")} r
+JOIN ${ref("mart_current_inventory")} ci USING (sku_id, warehouse_id)
+JOIN ${ref("dim_product")} p ON p.sku_id = r.sku_id
