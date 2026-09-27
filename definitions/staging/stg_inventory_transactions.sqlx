@@ -45,3 +45,4 @@ SELECT
 FROM ranked r
 LEFT JOIN ${ref("stg_master_product")} mp USING (sku_id)
 WHERE r.rn = 1
+ORDER BY r.transaction_date ASC
