@@ -1,0 +1,21 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.consumption_dataset,
+  name: "vw_sales_trend_monthly",
+  tags: ["consumption"],
+  description: "One row per Month x Category x Warehouse: revenue, units sold, order count. Primary table for sales trend / seasonality charts and time-based questions."
+}
+
+SELECT
+  DATE_TRUNC(fs.sales_date, MONTH) AS sales_month,
+  p.category,
+  p.sub_category,
+  fs.warehouse_id                  AS warehouse,
+  COUNT(DISTINCT fs.sales_id)      AS order_lines,
+  COUNT(DISTINCT fs.customer_id)   AS distinct_customers,
+  SUM(fs.quantity)                 AS units_sold,
+  SUM(fs.net_sales)                AS revenue_idr,
+  SUM(fs.discount)                 AS discount_given_idr
+FROM ${ref("fact_sales")} fs
+JOIN ${ref("dim_product")} p USING (sku_id)
+GROUP BY 1, 2, 3, 4

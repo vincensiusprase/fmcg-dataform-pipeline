@@ -1,0 +1,30 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.staging_dataset,
+  name: "stg_purchase_orders",
+  tags: ["staging"],
+  description: "Cleaned PO lines with lateness/fill-rate flags derived, missing lead time recomputed from dates."
+}
+
+SELECT
+  TRIM(PO_ID)                          AS po_id,
+  CAST(PO_Date AS DATE)                AS po_date,
+  TRIM(Supplier_ID)                    AS supplier_id,
+  TRIM(SKU_ID)                         AS sku_id,
+  CAST(Order_Qty AS INT64)             AS order_qty,
+  CAST(Expected_Date AS DATE)          AS expected_date,
+  CAST(Actual_Receipt_Date AS DATE)    AS actual_receipt_date,
+  CAST(Received_Qty AS INT64)          AS received_qty,
+  CAST(Unit_Cost AS NUMERIC)           AS unit_cost,
+  UPPER(TRIM(PO_Status))               AS po_status,
+  COALESCE(
+    CAST(Lead_Time_Actual_Days AS INT64),
+    DATE_DIFF(CAST(Actual_Receipt_Date AS DATE), CAST(PO_Date AS DATE), DAY)
+  )                                    AS lead_time_actual_days,
+  CASE WHEN Actual_Receipt_Date IS NOT NULL AND Expected_Date IS NOT NULL
+       THEN DATE_DIFF(CAST(Actual_Receipt_Date AS DATE), CAST(Expected_Date AS DATE), DAY)
+       ELSE NULL END                  AS days_late,
+  SAFE_DIVIDE(Received_Qty, NULLIF(Order_Qty, 0)) AS fill_rate
+FROM ${ref("purchase_orders")}
+WHERE PO_ID IS NOT NULL
+QUALIFY ROW_NUMBER() OVER (PARTITION BY PO_ID ORDER BY PO_Date) = 1

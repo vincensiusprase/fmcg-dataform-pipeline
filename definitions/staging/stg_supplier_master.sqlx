@@ -1,0 +1,24 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.staging_dataset,
+  name: "stg_supplier_master",
+  tags: ["staging"],
+  description: "Cleaned supplier master."
+}
+
+SELECT
+  TRIM(Supplier_ID)                        AS supplier_id,
+  TRIM(Supplier_Name)                      AS supplier_name,
+  TRIM(Supplier_Category)                  AS supplier_category,
+  TRIM(City)                               AS city,
+  TRIM(Province)                           AS province,
+  CAST(Lead_Time_Days AS INT64)            AS nominal_lead_time_days,
+  CAST(Minimum_Order_Value AS NUMERIC)     AS minimum_order_value,
+  CAST(MOQ AS INT64)                       AS moq,
+  CAST(On_Time_Delivery_Rate AS NUMERIC)   AS on_time_delivery_rate,
+  CAST(Quality_Rate AS NUMERIC)            AS quality_rate,
+  CAST(Payment_Term_Days AS INT64)         AS payment_term_days,
+  UPPER(TRIM(Supplier_Status))             AS supplier_status
+FROM ${ref("supplier_master")}
+WHERE Supplier_ID IS NOT NULL
+QUALIFY ROW_NUMBER() OVER (PARTITION BY Supplier_ID ORDER BY Supplier_ID) = 1

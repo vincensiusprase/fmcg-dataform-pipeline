@@ -1,0 +1,48 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.staging_dataset,
+  name: "stg_inventory_transactions",
+  tags: ["staging"],
+  description: "Deduplicated inventory movements with nulls backfilled from master_product cost.",
+  columns: {
+    is_backfilled_cost: "TRUE if Unit_Cost/Total_Cost were missing in raw and backfilled from master_product"
+  }
+}
+
+WITH dedup AS (
+  -- collapse exact duplicate scans (same tx id + all attributes) introduced upstream
+  SELECT DISTINCT
+    TRIM(Transaction_ID)   AS transaction_id,
+    CAST(Transaction_Date AS DATE) AS transaction_date,
+    TRIM(SKU_ID)            AS sku_id,
+    TRIM(Warehouse_ID)      AS warehouse_id,
+    UPPER(TRIM(Transaction_Type)) AS transaction_type,
+    Reference_No,
+    CAST(Quantity AS INT64)       AS quantity,
+    Unit_Cost,
+    Total_Cost,
+    NULLIF(TRIM(Supplier_ID), '') AS supplier_id
+  FROM ${ref("inventory_transactions")}
+  WHERE Transaction_ID IS NOT NULL
+),
+ranked AS (
+  -- if the same Transaction_ID still appears more than once (true dup key), keep the first
+  SELECT *, ROW_NUMBER() OVER (PARTITION BY transaction_id ORDER BY transaction_date) AS rn
+  FROM dedup
+)
+SELECT
+  r.transaction_id,
+  r.transaction_date,
+  r.sku_id,
+  r.warehouse_id,
+  r.transaction_type,
+  NULLIF(TRIM(r.Reference_No), '') AS reference_no,
+  r.quantity,
+  COALESCE(r.Unit_Cost, mp.unit_cost)                                   AS unit_cost,
+  COALESCE(r.Total_Cost, r.quantity * COALESCE(r.Unit_Cost, mp.unit_cost)) AS total_cost,
+  r.supplier_id,
+  (r.Unit_Cost IS NULL OR r.Total_Cost IS NULL)                         AS is_backfilled_cost
+FROM ranked r
+LEFT JOIN ${ref("stg_master_product")} mp USING (sku_id)
+WHERE r.rn = 1
+ORDER BY r.transaction_date ASC

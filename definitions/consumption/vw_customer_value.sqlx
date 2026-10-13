@@ -1,0 +1,31 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.consumption_dataset,
+  name: "vw_customer_value",
+  tags: ["consumption"],
+  description: "One row per customer: RFM scores/segment, lifetime value, recency. Primary table for 'who are our best/at-risk customers' questions.",
+  columns: {
+    customer: "Customer code",
+    rfm_segment: "Champions / Loyal Customers / At Risk (High Value) / Hibernating / Lost / etc.",
+    lifetime_value_idr: "Total net sales (IDR), lifetime"
+  }
+}
+
+SELECT
+  c.customer_id                AS customer,
+  c.customer_name,
+  c.customer_type,
+  c.city,
+  c.province,
+  c.join_date,
+  rfm.recency_days,
+  rfm.frequency_orders,
+  rfm.monetary_total            AS lifetime_value_idr,
+  rfm.avg_order_value           AS avg_order_value_idr,
+  rfm.recency_score,
+  rfm.frequency_score,
+  rfm.monetary_score,
+  rfm.rfm_code,
+  rfm.rfm_segment
+FROM ${ref("dim_customer")} c
+LEFT JOIN ${ref("mart_rfm_analysis")} rfm USING (customer_id)

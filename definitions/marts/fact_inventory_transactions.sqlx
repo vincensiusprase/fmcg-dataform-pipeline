@@ -1,0 +1,25 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "fact_inventory_transactions",
+  tags: ["mart", "fact"],
+  description: "Grain: 1 row per stock movement. Bring-your-own filters for INBOUND/OUTBOUND/ADJUSTMENT/RETURN.",
+  assertions: {
+    uniqueKey: ["transaction_id"],
+    nonNull: ["transaction_id", "sku_id", "warehouse_id", "transaction_date"]
+  }
+}
+
+SELECT
+  transaction_id,
+  transaction_date,
+  sku_id,
+  warehouse_id,
+  transaction_type,
+  reference_no,
+  quantity,
+  unit_cost,
+  total_cost,
+  supplier_id,
+  is_backfilled_cost
+FROM ${ref("stg_inventory_transactions")}

@@ -1,0 +1,23 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.staging_dataset,
+  name: "stg_current_inventory",
+  tags: ["staging"],
+  description: "Cleaned current inventory snapshot (source-provided ledger balance)."
+}
+
+SELECT
+  TRIM(SKU_ID)                          AS sku_id,
+  TRIM(Warehouse_ID)                    AS warehouse_id,
+  CAST(Current_Stock AS INT64)          AS current_stock,
+  CAST(Reserved_Stock AS INT64)         AS reserved_stock,
+  CAST(Available_Stock AS INT64)        AS available_stock,
+  CAST(On_Order_Qty AS INT64)           AS on_order_qty,
+  CAST(Inventory_Value AS NUMERIC)      AS inventory_value,
+  CAST(Last_Inbound_Date AS DATE)       AS last_inbound_date,
+  CAST(Last_Outbound_Date AS DATE)      AS last_outbound_date,
+  CAST(Days_Since_Last_Outbound AS INT64) AS days_since_last_outbound,
+  CAST(Demand_STD_90D AS NUMERIC)       AS demand_std_90d
+FROM ${ref("current_inventory")}
+WHERE SKU_ID IS NOT NULL AND Warehouse_ID IS NOT NULL
+QUALIFY ROW_NUMBER() OVER (PARTITION BY SKU_ID, Warehouse_ID ORDER BY SKU_ID) = 1

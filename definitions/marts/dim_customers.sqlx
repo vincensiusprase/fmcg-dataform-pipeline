@@ -1,0 +1,26 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "dim_customer",
+  tags: ["mart", "dim"],
+  description: "Customer dimension enriched with recomputed RFM segment.",
+  assertions: {
+    uniqueKey: ["customer_id"],
+    nonNull: ["customer_id"]
+  }
+}
+
+SELECT
+  cm.customer_id,
+  cm.customer_name,
+  cm.customer_type,
+  cm.city,
+  cm.province,
+  cm.customer_segment_source,
+  cm.join_date,
+  rfm.recency_score,
+  rfm.frequency_score,
+  rfm.monetary_score,
+  rfm.rfm_segment
+FROM ${ref("stg_customer_master")} cm
+LEFT JOIN ${ref("mart_rfm_analysis")} rfm USING (customer_id)

@@ -1,0 +1,32 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.consumption_dataset,
+  name: "vw_supplier_scorecard",
+  tags: ["consumption"],
+  description: "One row per supplier: actual on-time delivery rate, fill rate, lead time reliability vs. baseline. Primary table for 'which suppliers are underperforming' questions."
+}
+
+SELECT
+  supplier_id                    AS supplier,
+  supplier_name,
+  supplier_category,
+  city,
+  province,
+  nominal_lead_time_days,
+  avg_lead_time_actual_days,
+  stddev_lead_time_actual_days   AS lead_time_variability_days,
+  baseline_on_time_delivery_rate,
+  actual_on_time_rate,
+  on_time_rate_variance,
+  actual_avg_fill_rate,
+  quality_rate,
+  total_po_lines,
+  cancelled_po_lines,
+  partial_po_lines,
+  CASE
+    WHEN actual_on_time_rate IS NULL THEN 'NO_PO_HISTORY'
+    WHEN actual_on_time_rate < 0.75 THEN 'UNDERPERFORMING'
+    WHEN actual_on_time_rate < 0.90 THEN 'ACCEPTABLE'
+    ELSE 'RELIABLE'
+  END AS performance_tier
+FROM ${ref("mart_supplier_performance")}

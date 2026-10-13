@@ -1,0 +1,40 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "mart_supplier_performance",
+  tags: ["mart", "analysis"],
+  description: "Supplier scorecard: actual on-time rate, fill rate and lead-time variability from purchase_orders, benchmarked against the supplier_master baseline."
+}
+
+WITH agg AS (
+  SELECT
+    supplier_id,
+    COUNT(*)                                        AS total_po_lines,
+    ROUND(AVG(lead_time_actual_days), 2)             AS avg_lead_time_actual_days,
+    ROUND(STDDEV_SAMP(lead_time_actual_days), 2)      AS stddev_lead_time_actual_days,
+    ROUND(SAFE_DIVIDE(COUNTIF(days_late <= 0), COUNTIF(actual_receipt_date IS NOT NULL)), 3) AS actual_on_time_rate,
+    ROUND(AVG(fill_rate), 3)                          AS actual_avg_fill_rate,
+    COUNTIF(po_status = 'CANCELLED')                  AS cancelled_po_lines,
+    COUNTIF(po_status = 'PARTIAL')                    AS partial_po_lines
+  FROM ${ref("fact_purchase_orders")}
+  GROUP BY 1
+)
+SELECT
+  s.supplier_id,
+  s.supplier_name,
+  s.supplier_category,
+  s.city,
+  s.province,
+  s.nominal_lead_time_days,
+  s.on_time_delivery_rate  AS baseline_on_time_delivery_rate,
+  s.quality_rate,
+  a.total_po_lines,
+  a.avg_lead_time_actual_days,
+  a.stddev_lead_time_actual_days,
+  a.actual_on_time_rate,
+  a.actual_avg_fill_rate,
+  a.cancelled_po_lines,
+  a.partial_po_lines,
+  ROUND(a.actual_on_time_rate - s.on_time_delivery_rate, 3) AS on_time_rate_variance
+FROM ${ref("dim_supplier")} s
+LEFT JOIN agg a USING (supplier_id)

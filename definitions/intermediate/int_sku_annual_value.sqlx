@@ -1,0 +1,28 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.intermediate_dataset,
+  name: "int_sku_annual_value",
+  tags: ["intermediate"],
+  description: "Annualized consumption value per SKU = (total OUTBOUND qty x unit cost) normalized to a 365-day year based on the observed transaction span. Basis for ABC analysis."
+}
+
+WITH span AS (
+  SELECT DATE_DIFF(MAX(transaction_date), MIN(transaction_date), DAY) + 1 AS days_observed
+  FROM ${ref("stg_inventory_transactions")}
+),
+usage AS (
+  SELECT
+    sku_id,
+    SUM(quantity) AS total_qty_shipped,
+    SUM(total_cost) AS total_cogs_shipped
+  FROM ${ref("stg_inventory_transactions")}
+  WHERE transaction_type = 'OUTBOUND'
+  GROUP BY 1
+)
+SELECT
+  u.sku_id,
+  u.total_qty_shipped,
+  u.total_cogs_shipped,
+  ROUND(u.total_qty_shipped * 365.0 / s.days_observed, 1)   AS annualized_qty,
+  ROUND(u.total_cogs_shipped * 365.0 / s.days_observed, 2)  AS annual_consumption_value
+FROM usage u, span s

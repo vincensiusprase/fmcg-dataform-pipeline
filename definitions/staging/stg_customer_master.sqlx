@@ -1,0 +1,19 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.staging_dataset,
+  name: "stg_customer_master",
+  tags: ["staging"],
+  description: "Cleaned customer master; missing City coalesced to 'UNKNOWN'."
+}
+
+SELECT
+  TRIM(Customer_ID)                     AS customer_id,
+  TRIM(Customer_Name)                   AS customer_name,
+  TRIM(Customer_Type)                   AS customer_type,
+  COALESCE(TRIM(City), 'UNKNOWN')       AS city,
+  TRIM(Province)                        AS province,
+  TRIM(Customer_Segment)                AS customer_segment_source,
+  CAST(Join_Date AS DATE)               AS join_date
+FROM ${ref("customer_master")}
+WHERE Customer_ID IS NOT NULL
+QUALIFY ROW_NUMBER() OVER (PARTITION BY Customer_ID ORDER BY Customer_ID) = 1

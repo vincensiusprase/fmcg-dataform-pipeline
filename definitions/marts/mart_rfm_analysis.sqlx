@@ -1,0 +1,44 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "mart_rfm_analysis",
+  tags: ["mart", "analysis"],
+  description: "RFM scoring (1-5 quintiles, 5 = best) and segment label, snapshot date from workflow_settings vars.snapshot_date.",
+  assertions: {
+    uniqueKey: ["customer_id"],
+    nonNull: ["customer_id"]
+  }
+}
+
+WITH base AS (
+  SELECT * FROM ${ref("int_customer_sales_agg")}
+),
+scored AS (
+  SELECT
+    customer_id,
+    first_purchase_date,
+    last_purchase_date,
+    recency_days,
+    frequency_orders,
+    monetary_total,
+    avg_order_value,
+    -- lower recency_days = better -> invert quintile so 5 = most recent
+    6 - NTILE(5) OVER (ORDER BY recency_days)        AS recency_score,
+    NTILE(5) OVER (ORDER BY frequency_orders)        AS frequency_score,
+    NTILE(5) OVER (ORDER BY monetary_total)          AS monetary_score
+  FROM base
+)
+SELECT
+  *,
+  CONCAT(recency_score, frequency_score, monetary_score) AS rfm_code,
+  CASE
+    WHEN recency_score >= 4 AND frequency_score >= 4 AND monetary_score >= 4 THEN 'Champions'
+    WHEN recency_score >= 4 AND frequency_score >= 3 THEN 'Loyal Customers'
+    WHEN recency_score >= 4 AND frequency_score <= 2 THEN 'New / Promising'
+    WHEN recency_score = 3 AND frequency_score >= 3 THEN 'Potential Loyalist'
+    WHEN recency_score <= 2 AND frequency_score >= 4 AND monetary_score >= 4 THEN 'At Risk (High Value)'
+    WHEN recency_score <= 2 AND frequency_score >= 3 THEN 'Cannot Lose Them'
+    WHEN recency_score <= 2 AND frequency_score <= 2 THEN 'Hibernating / Lost'
+    ELSE 'Needs Attention'
+  END AS rfm_segment
+FROM scored

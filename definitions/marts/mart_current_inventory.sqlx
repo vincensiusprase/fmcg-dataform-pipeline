@@ -1,0 +1,36 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.mart_dataset,
+  name: "mart_current_inventory",
+  tags: ["mart", "analysis"],
+  description: "Current inventory snapshot enriched with product/category info and inventory age bucket.",
+  assertions: {
+    uniqueKey: ["sku_id", "warehouse_id"],
+    nonNull: ["sku_id", "warehouse_id"]
+  }
+}
+
+SELECT
+  ci.sku_id,
+  ci.warehouse_id,
+  p.category,
+  p.sub_category,
+  p.brand,
+  p.abc_class_source,
+  ci.current_stock,
+  ci.reserved_stock,
+  ci.available_stock,
+  ci.on_order_qty,
+  ci.inventory_value,
+  ci.last_inbound_date,
+  ci.last_outbound_date,
+  ci.days_since_last_outbound,
+  ci.demand_std_90d,
+  CASE
+    WHEN ci.days_since_last_outbound IS NULL THEN 'NO_MOVEMENT_DATA'
+    WHEN ci.days_since_last_outbound <= 7 THEN 'ACTIVE'
+    WHEN ci.days_since_last_outbound <= 30 THEN 'SLOW_MOVING'
+    ELSE 'DEAD_STOCK_RISK'
+  END AS movement_flag
+FROM ${ref("stg_current_inventory")} ci
+LEFT JOIN ${ref("stg_master_product")} p USING (sku_id)

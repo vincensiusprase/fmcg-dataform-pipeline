@@ -1,0 +1,40 @@
+config {
+  type: "table",
+  schema: dataform.projectConfig.vars.intermediate_dataset,
+  name: "int_demand_stats",
+  tags: ["intermediate"],
+  description: "Average daily demand and demand std dev per SKU x Warehouse, computed both over full history and trailing 90 days (used for Safety Stock / ROP)."
+}
+
+WITH max_date_per_key AS (
+  SELECT sku_id, warehouse_id, MAX(calendar_date) AS as_of_date
+  FROM ${ref("int_daily_demand")}
+  GROUP BY 1, 2
+),
+full_hist AS (
+  SELECT sku_id, warehouse_id,
+    AVG(qty_shipped)    AS avg_daily_demand_full,
+    STDDEV_SAMP(qty_shipped) AS stddev_daily_demand_full
+  FROM ${ref("int_daily_demand")}
+  GROUP BY 1, 2
+),
+trailing_90 AS (
+  SELECT d.sku_id, d.warehouse_id,
+    AVG(d.qty_shipped)    AS avg_daily_demand_90d,
+    STDDEV_SAMP(d.qty_shipped) AS stddev_daily_demand_90d
+  FROM ${ref("int_daily_demand")} d
+  JOIN max_date_per_key m
+    ON m.sku_id = d.sku_id AND m.warehouse_id = d.warehouse_id
+  WHERE d.calendar_date > DATE_SUB(m.as_of_date, INTERVAL 90 DAY)
+  GROUP BY 1, 2
+)
+SELECT
+  f.sku_id,
+  f.warehouse_id,
+  ROUND(f.avg_daily_demand_full, 2)     AS avg_daily_demand_full,
+  ROUND(f.stddev_daily_demand_full, 2)  AS stddev_daily_demand_full,
+  ROUND(t.avg_daily_demand_90d, 2)      AS avg_daily_demand_90d,
+  ROUND(t.stddev_daily_demand_90d, 2)   AS stddev_daily_demand_90d
+FROM full_hist f
+LEFT JOIN trailing_90 t
+  ON t.sku_id = f.sku_id AND t.warehouse_id = f.warehouse_id
