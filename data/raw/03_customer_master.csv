@@ -1,0 +1,131 @@
+Customer_ID,Customer_Name,Customer_Type,City,Province,Customer_Segment,Join_Date
+CUST0001,Modern Trade Bekasi 001,Modern Trade,Bekasi,Jawa Barat,Platinum,2025-07-17
+CUST0002,Traditional Trade Denpasar 002,Traditional Trade,Denpasar,Bali,Platinum,2025-07-29
+CUST0003,Retail Makassar 003,Retail,Makassar,Sulawesi Selatan,Silver,2024-06-06
+CUST0004,Modern Trade Palembang 004,Modern Trade,Palembang,Sumatera Selatan,Platinum,2024-11-08
+CUST0005,E-Commerce Malang 005,E-Commerce,Malang,Jawa Timur,Platinum,2024-09-05
+CUST0006,Distributor Makassar 006,Distributor,Makassar,Sulawesi Selatan,Silver,2023-10-27
+CUST0007,Modern Trade Makassar 007,Modern Trade,Makassar,Sulawesi Selatan,Platinum,2024-10-10
+CUST0008,Wholesaler Makassar 008,Wholesaler,Makassar,Sulawesi Selatan,Gold,2025-09-08
+CUST0009,Distributor Tangerang 009,Distributor,Tangerang,Banten,Platinum,2025-05-29
+CUST0010,Modern Trade Malang 010,Modern Trade,Malang,Jawa Timur,Gold,2025-06-11
+CUST0011,Modern Trade Tangerang 011,Modern Trade,Tangerang,Banten,Platinum,2025-03-15
+CUST0012,Modern Trade Surabaya 012,Modern Trade,Surabaya,Jawa Timur,Platinum,2023-11-13
+CUST0013,Traditional Trade Semarang 013,Traditional Trade,Semarang,Jawa Tengah,Silver,2024-07-20
+CUST0014,Modern Trade Makassar 014,Modern Trade,Makassar,Sulawesi Selatan,Platinum,2025-01-09
+CUST0015,Retail Bekasi 015,Retail,Bekasi,Jawa Barat,Bronze,2023-11-08
+CUST0016,Traditional Trade Bandung 016,Traditional Trade,Bandung,Jawa Barat,Silver,2023-10-11
+CUST0017,Wholesaler Yogyakarta 017,Wholesaler,Yogyakarta,DI Yogyakarta,Gold,2025-06-09
+CUST0018,Wholesaler Malang 018,Wholesaler,Malang,Jawa Timur,Platinum,2024-11-15
+CUST0019,Wholesaler Semarang 019,Wholesaler,Semarang,Jawa Tengah,Gold,2025-07-08
+CUST0020,Retail Tangerang 020,Retail,Tangerang,Banten,Silver,2024-03-04
+CUST0021,Modern Trade Makassar 021,Modern Trade,Makassar,Sulawesi Selatan,Platinum,2024-09-13
+CUST0022,Retail Denpasar 022,Retail,Denpasar,Bali,Bronze,2023-10-23
+CUST0023,Retail Surabaya 023,Retail,Surabaya,Jawa Timur,Silver,2023-11-27
+CUST0024,Modern Trade Medan 024,Modern Trade,Medan,Sumatera Utara,Gold,2025-02-11
+CUST0025,Traditional Trade Malang 025,Traditional Trade,Malang,Jawa Timur,Bronze,2024-01-19
+CUST0026,Traditional Trade Tangerang 026,Traditional Trade,Tangerang,Banten,Bronze,2024-01-08
+CUST0027,Modern Trade Makassar 027,Modern Trade,Makassar,Sulawesi Selatan,Platinum,2024-09-19
+CUST0028,Wholesaler Bandung 028,Wholesaler,Bandung,Jawa Barat,Gold,2025-07-27
+CUST0029,E-Commerce Yogyakarta 029,E-Commerce,Yogyakarta,DI Yogyakarta,Gold,2024-11-23
+CUST0030,Retail Bandung 030,Retail,,Jawa Barat,Silver,2025-09-16
+CUST0031,Traditional Trade Palembang 031,Traditional Trade,,Sumatera Selatan,Bronze,2024-11-28
+CUST0032,Traditional Trade Makassar 032,Traditional Trade,Makassar,Sulawesi Selatan,Gold,2023-12-10
+CUST0033,E-Commerce Bekasi 033,E-Commerce,Bekasi,Jawa Barat,Bronze,2024-04-01
+CUST0034,Modern Trade Malang 034,Modern Trade,Malang,Jawa Timur,Platinum,2025-09-10
+CUST0035,Distributor Medan 035,Distributor,Medan,Sumatera Utara,Silver,2024-09-08
+CUST0036,Modern Trade Surabaya 036,Modern Trade,Surabaya,Jawa Timur,Platinum,2025-07-26
+CUST0037,Retail Surabaya 037,Retail,Surabaya,Jawa Timur,Bronze,2025-09-02
+CUST0038,Wholesaler Makassar 038,Wholesaler,Makassar,Sulawesi Selatan,Silver,2025-03-21
+CUST0039,Traditional Trade Denpasar 039,Traditional Trade,Denpasar,Bali,Silver,2025-06-06
+CUST0040,Modern Trade Yogyakarta 040,Modern Trade,Yogyakarta,DI Yogyakarta,Bronze,2025-05-19
+CUST0041,Distributor Medan 041,Distributor,Medan,Sumatera Utara,Gold,2024-04-02
+CUST0042,Distributor Bandung 042,Distributor,Bandung,Jawa Barat,Platinum,2024-05-11
+CUST0043,Distributor Makassar 043,Distributor,Makassar,Sulawesi Selatan,Bronze,2024-05-15
+CUST0044,Traditional Trade Bandung 044,Traditional Trade,Bandung,Jawa Barat,Gold,2024-12-20
+CUST0045,Traditional Trade Bandung 045,Traditional Trade,Bandung,Jawa Barat,Bronze,2024-09-07
+CUST0046,Retail Yogyakarta 046,Retail,Yogyakarta,DI Yogyakarta,Platinum,2024-05-20
+CUST0047,Retail Tangerang 047,Retail,Tangerang,Banten,Bronze,2025-06-22
+CUST0048,Traditional Trade Makassar 048,Traditional Trade,Makassar,Sulawesi Selatan,Silver,2024-02-22
+CUST0049,Wholesaler Palembang 049,Wholesaler,Palembang,Sumatera Selatan,Silver,2024-08-27
+CUST0050,Retail Denpasar 050,Retail,Denpasar,Bali,Platinum,2023-12-01
+CUST0051,Distributor Surabaya 051,Distributor,Surabaya,Jawa Timur,Platinum,2024-09-24
+CUST0052,E-Commerce Yogyakarta 052,E-Commerce,Yogyakarta,DI Yogyakarta,Platinum,2024-07-04
+CUST0053,Wholesaler Medan 053,Wholesaler,Medan,Sumatera Utara,Gold,2024-12-05
+CUST0054,Traditional Trade Palembang 054,Traditional Trade,Palembang,Sumatera Selatan,Silver,2024-07-02
+CUST0055,Retail Semarang 055,Retail,Semarang,Jawa Tengah,Silver,2024-03-01
+CUST0056,Traditional Trade Denpasar 056,Traditional Trade,Denpasar,Bali,Gold,2024-11-27
+CUST0057,Wholesaler Palembang 057,Wholesaler,Palembang,Sumatera Selatan,Platinum,2024-01-06
+CUST0058,Retail Yogyakarta 058,Retail,Yogyakarta,DI Yogyakarta,Bronze,2024-05-11
+CUST0059,Retail Denpasar 059,Retail,Denpasar,Bali,Gold,2024-02-10
+CUST0060,Traditional Trade Surabaya 060,Traditional Trade,Surabaya,Jawa Timur,Bronze,2023-11-21
+CUST0061,Retail Bekasi 061,Retail,Bekasi,Jawa Barat,Gold,2023-11-16
+CUST0062,Retail Palembang 062,Retail,Palembang,Sumatera Selatan,Silver,2025-03-31
+CUST0063,Wholesaler Surabaya 063,Wholesaler,,Jawa Timur,Gold,2023-11-10
+CUST0064,E-Commerce Malang 064,E-Commerce,Malang,Jawa Timur,Gold,2025-05-02
+CUST0065,Modern Trade Bandung 065,Modern Trade,Bandung,Jawa Barat,Bronze,2024-02-12
+CUST0066,Retail Surabaya 066,Retail,Surabaya,Jawa Timur,Gold,2024-07-03
+CUST0067,Modern Trade Surabaya 067,Modern Trade,Surabaya,Jawa Timur,Gold,2024-07-10
+CUST0068,Traditional Trade Palembang 068,Traditional Trade,Palembang,Sumatera Selatan,Bronze,2024-04-02
+CUST0069,Traditional Trade Malang 069,Traditional Trade,Malang,Jawa Timur,Platinum,2025-09-25
+CUST0070,Traditional Trade Medan 070,Traditional Trade,Medan,Sumatera Utara,Silver,2023-12-30
+CUST0071,Wholesaler Surabaya 071,Wholesaler,Surabaya,Jawa Timur,Bronze,2024-10-26
+CUST0072,Traditional Trade Bandung 072,Traditional Trade,Bandung,Jawa Barat,Gold,2025-04-02
+CUST0073,Retail Surabaya 073,Retail,Surabaya,Jawa Timur,Gold,2023-10-24
+CUST0074,Retail Bekasi 074,Retail,Bekasi,Jawa Barat,Bronze,2023-11-11
+CUST0075,Retail Jakarta 075,Retail,Jakarta,DKI Jakarta,Silver,2024-07-15
+CUST0076,Modern Trade Bandung 076,Modern Trade,Bandung,Jawa Barat,Silver,2025-06-07
+CUST0077,Wholesaler Makassar 077,Wholesaler,Makassar,Sulawesi Selatan,Gold,2024-01-29
+CUST0078,Retail Denpasar 078,Retail,Denpasar,Bali,Silver,2024-10-12
+CUST0079,Traditional Trade Tangerang 079,Traditional Trade,Tangerang,Banten,Bronze,2024-02-11
+CUST0080,Wholesaler Palembang 080,Wholesaler,Palembang,Sumatera Selatan,Bronze,2025-09-16
+CUST0081,Retail Bekasi 081,Retail,Bekasi,Jawa Barat,Silver,2024-10-05
+CUST0082,Retail Makassar 082,Retail,Makassar,Sulawesi Selatan,Bronze,2024-06-03
+CUST0083,Retail Yogyakarta 083,Retail,Yogyakarta,DI Yogyakarta,Bronze,2025-07-05
+CUST0084,Traditional Trade Medan 084,Traditional Trade,Medan,Sumatera Utara,Silver,2025-06-13
+CUST0085,Wholesaler Bekasi 085,Wholesaler,Bekasi,Jawa Barat,Bronze,2023-11-29
+CUST0086,Retail Tangerang 086,Retail,Tangerang,Banten,Bronze,2025-06-09
+CUST0087,Wholesaler Bandung 087,Wholesaler,Bandung,Jawa Barat,Gold,2025-09-05
+CUST0088,Traditional Trade Palembang 088,Traditional Trade,Palembang,Sumatera Selatan,Platinum,2024-09-02
+CUST0089,Retail Makassar 089,Retail,Makassar,Sulawesi Selatan,Silver,2023-10-02
+CUST0090,Traditional Trade Makassar 090,Traditional Trade,Makassar,Sulawesi Selatan,Gold,2024-03-01
+CUST0091,Traditional Trade Palembang 091,Traditional Trade,Palembang,Sumatera Selatan,Gold,2025-05-06
+CUST0092,Retail Jakarta 092,Retail,Jakarta,DKI Jakarta,Silver,2025-03-10
+CUST0093,Modern Trade Palembang 093,Modern Trade,Palembang,Sumatera Selatan,Platinum,2024-07-21
+CUST0094,Retail Surabaya 094,Retail,Surabaya,Jawa Timur,Bronze,2025-01-04
+CUST0095,Retail Palembang 095,Retail,Palembang,Sumatera Selatan,Gold,2023-10-09
+CUST0096,Retail Yogyakarta 096,Retail,Yogyakarta,DI Yogyakarta,Silver,2025-04-01
+CUST0097,Retail Denpasar 097,Retail,Denpasar,Bali,Gold,2024-12-27
+CUST0098,Retail Denpasar 098,Retail,Denpasar,Bali,Bronze,2023-12-13
+CUST0099,Retail Semarang 099,Retail,Semarang,Jawa Tengah,Bronze,2023-11-22
+CUST0100,Traditional Trade Denpasar 100,Traditional Trade,Denpasar,Bali,Silver,2024-07-05
+CUST0101,Traditional Trade Yogyakarta 101,Traditional Trade,Yogyakarta,DI Yogyakarta,Gold,2025-07-17
+CUST0102,Modern Trade Palembang 102,Modern Trade,Palembang,Sumatera Selatan,Platinum,2025-05-31
+CUST0103,Retail Surabaya 103,Retail,Surabaya,Jawa Timur,Silver,2024-02-12
+CUST0104,E-Commerce Medan 104,E-Commerce,Medan,Sumatera Utara,Gold,2024-10-07
+CUST0105,Modern Trade Denpasar 105,Modern Trade,Denpasar,Bali,Platinum,2025-08-23
+CUST0106,Traditional Trade Yogyakarta 106,Traditional Trade,Yogyakarta,DI Yogyakarta,Silver,2024-05-15
+CUST0107,Traditional Trade Bandung 107,Traditional Trade,Bandung,Jawa Barat,Silver,2024-05-16
+CUST0108,Traditional Trade Makassar 108,Traditional Trade,Makassar,Sulawesi Selatan,Silver,2024-09-05
+CUST0109,Retail Makassar 109,Retail,Makassar,Sulawesi Selatan,Silver,2025-01-25
+CUST0110,Traditional Trade Denpasar 110,Traditional Trade,Denpasar,Bali,Platinum,2025-04-16
+CUST0111,Retail Bandung 111,Retail,Bandung,Jawa Barat,Gold,2023-11-15
+CUST0112,Retail Bekasi 112,Retail,Bekasi,Jawa Barat,Silver,2024-04-15
+CUST0113,Modern Trade Yogyakarta 113,Modern Trade,Yogyakarta,DI Yogyakarta,Platinum,2025-01-04
+CUST0114,Retail Bandung 114,Retail,Bandung,Jawa Barat,Bronze,2024-03-19
+CUST0115,Traditional Trade Semarang 115,Traditional Trade,Semarang,Jawa Tengah,Bronze,2025-03-02
+CUST0116,Traditional Trade Bandung 116,Traditional Trade,Bandung,Jawa Barat,Silver,2024-07-03
+CUST0117,Modern Trade Denpasar 117,Modern Trade,Denpasar,Bali,Platinum,2025-04-14
+CUST0118,Retail Denpasar 118,Retail,Denpasar,Bali,Silver,2023-11-23
+CUST0119,Modern Trade Makassar 119,Modern Trade,Makassar,Sulawesi Selatan,Gold,2024-01-08
+CUST0120,E-Commerce Surabaya 120,E-Commerce,Surabaya,Jawa Timur,Platinum,2024-03-09
+CUST0121,Retail Yogyakarta 121,Retail,Yogyakarta,DI Yogyakarta,Gold,2023-10-12
+CUST0122,Traditional Trade Makassar 122,Traditional Trade,Makassar,Sulawesi Selatan,Gold,2024-10-07
+CUST0123,Retail Makassar 123,Retail,Makassar,Sulawesi Selatan,Platinum,2025-05-20
+CUST0124,Traditional Trade Medan 124,Traditional Trade,,Sumatera Utara,Silver,2023-11-06
+CUST0125,Retail Surabaya 125,Retail,Surabaya,Jawa Timur,Bronze,2025-08-27
+CUST0126,Distributor Yogyakarta 126,Distributor,Yogyakarta,DI Yogyakarta,Gold,2025-06-16
+CUST0127,Traditional Trade Tangerang 127,Traditional Trade,Tangerang,Banten,Bronze,2025-05-01
+CUST0128,Retail Tangerang 128,Retail,Tangerang,Banten,Gold,2024-07-05
+CUST0129,Retail Bekasi 129,Retail,Bekasi,Jawa Barat,Bronze,2025-03-14
+CUST0130,Distributor Makassar 130,Distributor,Makassar,Sulawesi Selatan,Platinum,2024-01-05

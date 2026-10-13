@@ -1,0 +1,56 @@
+SKU_ID,SKU_Name,Category,Sub_Category,Brand,Unit,Unit_Cost,Selling_Price,Supplier_ID,Lead_Time_Days,Shelf_Life_Days,MOQ,Pack_Size,ABC_Class
+SKU001,RumahBersih Floor Cleaner Refill,Household,Floor Cleaner,RumahBersih,PCS,31750,42750,SUP006,12,365,242,24,A
+SKU002,GoodTaste Snack 1L,Food & Beverage,Snack,GoodTaste,BOX,21150,24400,SUP004,7,90,355,48,A
+SKU003,Kopi Jaya Beverage 1kg,Food & Beverage,Beverage,Kopi Jaya,CARTON,14450,18500,SUP010,10,730,198,48,A
+SKU004,Rasa Prima Seasoning 500ml,Food & Beverage,Seasoning,Rasa Prima,PCS,26050,31850,SUP004,7,270,487,48,C
+SKU005,Kopi Jaya Seasoning Pouch,Food & Beverage,Seasoning,Kopi Jaya,BOX,13350,17850,SUP002,5,365,345,6,C
+SKU006,RumahBersih Insecticide 1L,Household,Insecticide,RumahBersih,LITER,53950,79200,SUP001,22,540,331,12,B
+SKU007,SariRasa Coffee & Tea 100ml,Food & Beverage,Coffee & Tea,SariRasa,PCS,34200,41100,SUP002,9,730,205,6,A
+SKU008,MieMas Cooking Oil 1L,Food & Beverage,Cooking Oil,MieMas,PCS,27950,37000,SUP002,5,180,499,12,C
+SKU009,FreshMe Facial Care 500ml,Personal Care,Facial Care,FreshMe,PCS,4700,6150,SUP003,16,365,204,24,C
+SKU010,DayaCare Lotion 200g,Personal Care,Lotion,DayaCare,BOX,14150,21100,SUP003,19,365,208,24,C
+SKU011,RumahBersih Detergent Pouch,Household,Detergent,RumahBersih,BOX,21550,29000,SUP007,31,540,185,48,C
+SKU012,Kopi Jaya Seasoning 250ml,Food & Beverage,Seasoning,Kopi Jaya,BOX,29400,34400,SUP010,7,540,584,12,A
+SKU013,DayaGuna Tissue 500ml,Household,Tissue,DayaGuna,KG,30700,44050,SUP011,33,730,348,6,A
+SKU014,Berkah Snack Cooking Oil Pouch,Food & Beverage,Cooking Oil,Berkah Snack,BOX,28250,37350,SUP010,10,180,318,12,B
+SKU015,Wangi Alam Toothpaste Pouch,Personal Care,Toothpaste,Wangi Alam,BOX,27100,35850,SUP003,17,1095,517,24,A
+SKU016,GoodTaste Instant Noodles 500g,Food & Beverage,Instant Noodles,GoodTaste,BOX,8700,11400,SUP004,4,730,940,6,C
+SKU017,Kopi Jaya Snack 200g,Food & Beverage,Snack,Kopi Jaya,PCS,7400,8500,SUP010,7,180,174,6,C
+SKU018,Wangi Alam Lotion 200g,Personal Care,Lotion,Wangi Alam,PCS,20200,28300,SUP009,16,1095,169,48,B
+SKU019,Rasa Prima Snack Refill,Food & Beverage,Snack,Rasa Prima,PCS,26750,32950,SUP004,3,90,642,12,B
+SKU020,RumahBersih Detergent 1L,Household,Detergent,RumahBersih,PCS,55850,68650,SUP011,37,1095,393,48,B
+SKU021,DayaGuna Air Freshener Refill,Household,Air Freshener,DayaGuna,LITER,47800,59250,SUP011,35,540,357,24,B
+SKU022,Kopi Jaya Beverage 1L,Food & Beverage,Beverage,Kopi Jaya,BOX,13800,16250,SUP008,6,90,254,12,C
+SKU023,MieMas Biscuit Refill,Food & Beverage,Biscuit,MieMas,PCS,18600,23900,SUP004,4,540,937,48,A
+SKU024,GoodTaste Beverage 100ml,Food & Beverage,Beverage,GoodTaste,BOX,38550,49350,SUP004,7,365,724,24,C
+SKU025,RumahBersih Dishwashing 1kg,Household,Dishwashing,RumahBersih,PCS,43200,62950,SUP011,33,1095,128,24,A
+SKU026,GoodTaste Cooking Oil Pouch,Food & Beverage,Cooking Oil,GoodTaste,CARTON,8300,11100,SUP002,9,270,502,24,C
+SKU027,RumahBersih Air Freshener 100ml,Household,Air Freshener,RumahBersih,BOX,37450,46000,SUP007,31,365,269,6,A
+SKU028,DayaCare Lotion Refill,Personal Care,Lotion,DayaCare,BOX,42950,63950,SUP005,25,365,94,24,B
+SKU029,MieMas Instant Noodles Sachet,Food & Beverage,Instant Noodles,MieMas,PCS,30450,37550,SUP012,5,180,100,24,B
+SKU030,DayaGuna Insecticide 500g,Household,Insecticide,DayaGuna,BOX,25000,32350,SUP006,8,1095,380,6,C
+SKU031,Selera Nusantara Beverage 1kg,Food & Beverage,Beverage,Selera Nusantara,CARTON,26000,34750,SUP004,6,365,532,12,C
+SKU032,Higienis Plus Insecticide 100ml,Household,Insecticide,Higienis Plus,KG,11500,16700,SUP011,36,365,276,6,C
+SKU033,Selera Nusantara Coffee & Tea 500g,Food & Beverage,Coffee & Tea,Selera Nusantara,BOX,37550,45400,SUP012,4,180,95,12,A
+SKU034,SegarWangi Insecticide 1kg,Household,Insecticide,SegarWangi,PCS,59800,87500,SUP007,29,1095,131,48,A
+SKU035,CleanGlow Facial Care Refill,Personal Care,Facial Care,CleanGlow,BOX,8600,13050,SUP009,12,365,214,6,C
+SKU036,Selera Nusantara Cooking Oil Pouch,Food & Beverage,Cooking Oil,Selera Nusantara,CARTON,30350,35100,SUP002,5,90,422,6,C
+SKU037,Berkah Snack Cooking Oil Refill,Food & Beverage,Cooking Oil,Berkah Snack,CARTON,4900,6400,SUP012,6,90,154,48,B
+SKU038,GoodTaste Cooking Oil 200g,Food & Beverage,Cooking Oil,GoodTaste,PCS,7800,9750,SUP008,7,365,533,24,B
+SKU039,RumahBersih Detergent 100ml,Household,Detergent,RumahBersih,PCS,19850,28000,SUP007,32,730,116,24,A
+SKU040,Rasa Prima Coffee & Tea 500g,Food & Beverage,Coffee & Tea,Rasa Prima,CARTON,32650,38650,SUP004,3,540,985,6,B
+SKU041,CleanHome Floor Cleaner 500g,Household,Floor Cleaner,CleanHome,LITER,36450,45300,SUP001,24,730,273,12,A
+SKU042,FreshMe Deodorant Pouch,Personal Care,Deodorant,FreshMe,BOX,11550,16150,SUP009,14,1095,203,12,B
+SKU043,Selera Nusantara Instant Noodles Refill,Food & Beverage,Instant Noodles,Selera Nusantara,PCS,20650,26250,SUP008,7,730,333,12,B
+SKU044,DayaCare Soap 1L,Personal Care,Soap,DayaCare,PCS,5800,7950,SUP005,25,365,67,6,C
+SKU045,SegarWangi Tissue 500g,Household,Tissue,SegarWangi,LITER,40850,52850,SUP001,23,540,229,24,A
+SKU046,SariRasa Coffee & Tea 500ml,Food & Beverage,Coffee & Tea,SariRasa,BOX,33800,44850,SUP002,9,730,384,24,C
+SKU047,GoodTaste Cooking Oil 100ml,Food & Beverage,Cooking Oil,GoodTaste,CARTON,23500,27550,SUP002,5,730,175,48,C
+SKU048,GoodTaste Snack 200g,Food & Beverage,Snack,GoodTaste,PCS,15800,20500,SUP012,3,270,178,48,C
+SKU049,Rasa Prima Biscuit 200g,Food & Beverage,Biscuit,Rasa Prima,BOX,7550,9200,SUP008,8,90,497,48,C
+SKU050,CleanGlow Soap 200g,Personal Care,Soap,CleanGlow,BOX,23750,34250,SUP005,23,730,64,6,C
+SKU051,Berkah Snack Snack 500g,Food & Beverage,Snack,Berkah Snack,CARTON,44500,56100,SUP004,7,540,356,48,C
+SKU052,Berkah Snack Beverage 500ml,Food & Beverage,Beverage,Berkah Snack,PCS,34600,42750,SUP008,6,730,231,6,A
+SKU053,Kopi Jaya Seasoning 500ml,Food & Beverage,Seasoning,Kopi Jaya,PCS,14900,18550,SUP012,4,540,62,12,A
+SKU054,Higienis Plus Dishwashing Sachet,Household,Dishwashing,Higienis Plus,LITER,40700,57000,SUP011,36,730,209,6,B
+SKU055,SariRasa Beverage 1L,Food & Beverage,Beverage,SariRasa,CARTON,23000,29950,SUP010,11,270,559,24,C
