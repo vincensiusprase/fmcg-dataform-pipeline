@@ -1,0 +1,6 @@
+config { 
+    type: "declaration", 
+    database: dataform.projectConfig.defaultDatabase, 
+    schema: dataform.projectConfig.vars.raw_dataset, 
+    name: "employee_base",
+  description: "Raw sales_transactions loaded from GCS 08_employee_base.csv" }

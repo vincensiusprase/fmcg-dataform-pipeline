@@ -2,7 +2,7 @@ config {
   type: "operations",
   hasOutput: false,
   tags: ["load", "raw"],
-  description: "Loads the 7 FMCG CSV extracts from GCS into the raw_fmcg BigQuery dataset. Run this before `dataform run` on the transformation DAG (schedule as a separate step, e.g. Cloud Composer / Workflows, or a Dataform release+execute with tag 'load')."
+  description: "Loads the 8 FMCG CSV extracts from GCS into the raw_fmcg BigQuery dataset. Run this before `dataform run` on the transformation DAG (schedule as a separate step, e.g. Cloud Composer / Workflows, or a Dataform release+execute with tag 'load')."
 }
 
 js {
@@ -108,5 +108,21 @@ LOAD DATA OVERWRITE `${project}.${rawDataset}.current_inventory`
 FROM FILES (
   format = 'CSV',
   uris = ['${gcsBucket}/07_current_inventory.csv'],
+  skip_leading_rows = 1
+);
+
+---
+-- 08 employee base
+LOAD DATA OVERWRITE `${project}.${rawDataset}.employee_base`
+(
+  email STRING,
+  role STRING,
+  assigned_city STRING,
+  assigned_region STRING,
+  assigned_category STRING
+)
+FROM FILES (
+  format = 'CSV',
+  uris = ['${gcsBucket}/08_employee_base.csv'],
   skip_leading_rows = 1
 );

@@ -1,0 +1,49 @@
+config {
+  type: "view",
+  schema: dataform.projectConfig.vars.staging_dataset,
+  name: "stg_employee_base",
+  tags: ["staging", "employee", "security"],
+  description: "Staging view untuk master data karyawan. Melakukan pembersihan format email, penanganan NULL pada lokasi dan kategori.",
+  columns: {
+    email: "Email unik karyawan (dikonversi ke huruf kecil)",
+    role: "Jabatan/Role karyawan",
+    assigned_city: "Kota tugas (NULL jika tidak dibatasi kota)",
+    assigned_region: "Wilayah/Region tugas (NULL jika tidak dibatasi region)",
+    assigned_category: "Kategori produk tugas (NULL jika tidak dibatasi kategori)",
+    is_active: "Flag status aktif karyawan",
+    processed_at: "Timestamp saat data diolah di staging"
+  }
+}
+
+WITH source_data AS (
+  SELECT
+    -- Clean & Standardize Email
+    LOWER(TRIM(email)) AS email,
+    
+    -- Clean Role Name
+    TRIM(role) AS role,
+    
+    -- Convert Empty Strings or Whitespaces to NULL
+    NULLIF(TRIM(assigned_city), '')     AS assigned_city,
+    NULLIF(TRIM(assigned_region), '')   AS assigned_region,
+    NULLIF(TRIM(assigned_category), '') AS assigned_category
+
+  FROM ${ref("employee_base")} -- Mengacu pada tabel RAW yang di-load sebelumnya
+  WHERE email IS NOT NULL 
+    AND TRIM(email) != ''
+)
+
+SELECT
+  email,
+  role,
+  assigned_city,
+  assigned_region,
+  assigned_category,
+  
+  -- Flag aktif (Default TRUE jika email valid)
+  TRUE AS is_active,
+  
+  -- Metadata tracking
+  CURRENT_TIMESTAMP() AS processed_at
+
+FROM source_data
