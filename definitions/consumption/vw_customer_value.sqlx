@@ -1,57 +1,61 @@
 config {
+
   type: "view",
+
   schema: dataform.projectConfig.vars.consumption_dataset,
+
   name: "vw_customer_value",
+
   tags: ["consumption"],
-  description: "One row per customer: RFM scores/segment, lifetime value, recency, integrated with Row-Level Security (RLS) for Looker Studio.",
+
+  description: "One row per customer: RFM scores/segment, lifetime value, recency. Primary table for 'who are our best/at-risk customers' questions.",
+
   columns: {
+
     customer: "Customer code",
+
     rfm_segment: "Champions / Loyal Customers / At Risk (High Value) / Hibernating / Lost / etc.",
-    lifetime_value_idr: "Total net sales (IDR), lifetime",
-    viewer_email: "Email user authorized to view this record"
+
+    lifetime_value_idr: "Total net sales (IDR), lifetime"
+
   }
+
 }
 
+
+
 SELECT
-  c.customer_id             AS customer,
+
+  c.customer_id                AS customer,
+
   c.customer_name,
+
   c.customer_type,
+
   c.city,
+
   c.province,
+
   c.join_date,
+
   rfm.recency_days,
+
   rfm.frequency_orders,
-  rfm.monetary_total        AS lifetime_value_idr,
-  rfm.avg_order_value       AS avg_order_value_idr,
+
+  rfm.monetary_total            AS lifetime_value_idr,
+
+  rfm.avg_order_value           AS avg_order_value_idr,
+
   rfm.recency_score,
+
   rfm.frequency_score,
+
   rfm.monetary_score,
+
   rfm.rfm_code,
-  rfm.rfm_segment,
-  
-  -- Tambahkan kolom viewer_email untuk Filter by Email di Looker Studio
-  acc.viewer_email
+
+  rfm.rfm_segment
 
 FROM ${ref("dim_customer")} c
+
 LEFT JOIN ${ref("mart_rfm_analysis")} rfm USING (customer_id)
-
--- Map region/wilayah jika ada pemetaan city -> region
-LEFT JOIN ${ref("dim_city_region")} reg 
-  ON LOWER(c.city) = LOWER(reg.city_name)
-
--- JOIN ke tabel hak akses
-INNER JOIN ${ref("map_user_access")} acc 
-  ON (
-    -- 1. Sales Representative (Filter berdasarkan KOTA)
-    (acc.access_type = 'CITY' AND LOWER(c.city) = LOWER(acc.allowed_value))
-    
-    -- 2. Regional Manager (Filter berdasarkan REGION / Wilayah)
-    OR (acc.access_type = 'REGION' AND LOWER(reg.region_name) = LOWER(acc.allowed_value))
-    
-    -- 3. Category Manager (Khusus data customer/RFM, tampilkan jika bertipe CATEGORY)
-    -- Catatan: Jika ingin menyaring kategori produk tertentu per customer, perlakuannya sama
-    OR (acc.access_type = 'CATEGORY')
-    
-    -- 4. National Director & Admin (Melihat SELURUH DATA / Wildcard '*')
-    OR acc.access_type = 'ALL'
-  )

@@ -1,9 +1,9 @@
 config {
   type: "table",
   schema: dataform.projectConfig.vars.mart_dataset,
-  name: "map_user_access",
+  name: "mart_user_access",
   tags: ["security", "access_control", "mart"],
-  description: "Tabel pemetaan hak akses RLS Looker Studio yang dibentuk secara dinamis dari stg_employee.",
+  description: "Tabel pemetaan hak akses RLS Looker Studio yang dibentuk secara dinamis dari stg_employee_base.",
   columns: {
     viewer_email: "Email pengakses (di-match dengan email akun Google di Looker Studio)",
     access_type: "Jenis pembatasan akses: CITY, REGION, CATEGORY, atau ALL",
@@ -14,56 +14,65 @@ config {
 
 WITH employee AS (
   SELECT
-    email,
-    role,
-    assigned_city,
-    assigned_region,
-    assigned_category
+    CAST(email AS STRING) AS email,
+    CAST(role AS STRING) AS role,
+    CAST(assigned_city AS STRING) AS assigned_city,
+    CAST(assigned_region AS STRING) AS assigned_region,
+    CAST(assigned_category AS STRING) AS assigned_category
   FROM ${ref("stg_employee_base")}
   WHERE is_active = TRUE
+),
+
+raw_unions AS (
+  -- 1. Sales Representative (Akses berbasis KOTA)
+  SELECT
+    email AS viewer_email,
+    'CITY' AS access_type,
+    assigned_city AS allowed_value,
+    role
+  FROM employee
+  WHERE role = 'Sales Representative' 
+    AND assigned_city IS NOT NULL AND assigned_city != ''
+
+  UNION ALL
+
+  -- 2. Regional Manager (Akses berbasis REGION / Wilayah)
+  SELECT
+    email AS viewer_email,
+    'REGION' AS access_type,
+    assigned_region AS allowed_value,
+    role
+  FROM employee
+  WHERE role = 'Regional Manager' 
+    AND assigned_region IS NOT NULL AND assigned_region != ''
+
+  UNION ALL
+
+  -- 3. Category Manager (Akses berbasis KATEGORI PRODUK)
+  SELECT
+    email AS viewer_email,
+    'CATEGORY' AS access_type,
+    assigned_category AS allowed_value,
+    role
+  FROM employee
+  WHERE role = 'Category Manager' 
+    AND assigned_category IS NOT NULL AND assigned_category != ''
+
+  UNION ALL
+
+  -- 4. National Director & Admin (Akses SELURUH DATA / Wildcard '*')
+  SELECT
+    email AS viewer_email,
+    'ALL' AS access_type,
+    '*' AS allowed_value,
+    role
+  FROM employee
+  WHERE role IN ('National Director', 'Admin')
 )
 
--- 1. Sales Representative (Akses berbasis KOTA)
-SELECT
-  email AS viewer_email,
-  'CITY' AS access_type,
-  assigned_city AS allowed_value,
+SELECT DISTINCT
+  viewer_email,
+  access_type,
+  allowed_value,
   role
-FROM employee
-WHERE role = 'Sales Representative' 
-  AND assigned_city IS NOT NULL
-
-UNION ALL
-
--- 2. Regional Manager (Akses berbasis REGION / Wilayah)
-SELECT
-  email AS viewer_email,
-  'REGION' AS access_type,
-  assigned_region AS allowed_value,
-  role
-FROM employee
-WHERE role = 'Regional Manager' 
-  AND assigned_region IS NOT NULL
-
-UNION ALL
-
--- 3. Category Manager (Akses berbasis KATEGORI PRODUK)
-SELECT
-  email AS viewer_email,
-  'CATEGORY' AS access_type,
-  assigned_category AS allowed_value,
-  role
-FROM employee
-WHERE role = 'Category Manager' 
-  AND assigned_category IS NOT NULL
-
-UNION ALL
-
--- 4. National Director & Admin (Akses SELURUH DATA / Wildcard '*')
-SELECT
-  email AS viewer_email,
-  'ALL' AS access_type,
-  '*' AS allowed_value,
-  role
-FROM employee
-WHERE role IN ('National Director', 'Admin')
+FROM raw_unions
